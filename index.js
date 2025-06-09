@@ -10,17 +10,23 @@ document
   .querySelector(".js-calculate-bmi")
   .addEventListener("click", RenderOutputs);
 
-function RenderOutputs() {
+document.querySelector("body").addEventListener("keydown", (event) => {
+  if (event.key === "Enter") {
+    RenderOutputs();
+  } else if (event.key === "Delete") {
+    resetValues();
+  }
+});
 
+function RenderOutputs() {
   if (!bmi) {
     document.querySelector(".bmi").innerHTML = "N.A";
     document.querySelector(".category").innerHTML = "N.A";
     document.querySelector(".category").style.color = "black";
   }
 
-
-  if (age.value === '' || age.value === "0") {
-    error = 'age';
+  if (age.value === "" || age.value === "0") {
+    error = "age";
     validateError(error);
     return;
   } else if (height.value === "" || height.value === "0") {
@@ -43,8 +49,8 @@ function RenderOutputs() {
   } else if (gender === "female") {
     category = CategoryFemale(bmi);
     CategoryFlag(category);
-  } else { 
-    error = 'Gender';
+  } else {
+    error = "Gender";
     validateError(error);
   }
 }
@@ -84,7 +90,6 @@ function CategoryMale(bmi) {
 }
 
 function CategoryFemale(bmi) {
-
   if (!bmi) {
     return "N.A";
   }
@@ -100,17 +105,21 @@ function CategoryFemale(bmi) {
   }
 }
 
-//reset button
-document.querySelector(".js-reset").addEventListener("click", () => {
-  age.value = '';
-  weight.value = '';
-  height.value = '';
+function resetValues() {
+  age.value = "";
+  weight.value = "";
+  height.value = "";
   bmi = null;
   category = null;
-  document.querySelectorAll('input[name="gender"]').forEach(r => r.checked = false);
+  document
+    .querySelectorAll('input[name="gender"]')
+    .forEach((r) => (r.checked = false));
 
   RenderOutputs();
-});
+}
+
+//reset button
+document.querySelector(".js-reset").addEventListener("click", resetValues);
 
 function Gender() {
   const selected = document.querySelector('input[name="gender"]:checked');
@@ -128,10 +137,10 @@ function validateError(error) {
     document.querySelector(".error").style.margin = "0px";
   }, 2000);
 
-  if (error === 'Gender') {
+  if (error === "Gender") {
     document.querySelector(".error").innerHTML = `Please Select ${error}`;
     document.querySelector(".error").style.margin = "10px";
-  } else if (error === 'age' || error === 'height' || error === 'weight') {
+  } else if (error === "age" || error === "height" || error === "weight") {
     document.querySelector(".error").innerHTML = `Please enter ${error}`;
     document.querySelector(".error").style.margin = "10px";
   }
