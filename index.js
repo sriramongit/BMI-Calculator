@@ -5,11 +5,12 @@ let categoryEl = document.querySelector(".category");
 let bmi = 0;
 let category = "";
 let error;
+let errorTimeoutID = null; 
 
-document
-  .querySelector(".js-calculate-bmi")
-  .addEventListener("click", RenderOutputs);
+//click event listener
+document.querySelector(".js-calculate-bmi").addEventListener("click", RenderOutputs);
 
+//Key event listener
 document.querySelector("body").addEventListener("keydown", (event) => {
   if (event.key === "Enter") {
     RenderOutputs();
@@ -18,6 +19,7 @@ document.querySelector("body").addEventListener("keydown", (event) => {
   }
 });
 
+//rendering outputs
 function RenderOutputs() {
   if (!bmi) {
     document.querySelector(".bmi").innerHTML = "N.A";
@@ -55,6 +57,7 @@ function RenderOutputs() {
   }
 }
 
+//Adding colour codes to categories 
 function CategoryFlag(category) {
   if (category === "underweight" || category === "overweight") {
     categoryEl.style.color = "rgb(255, 217, 0)";
@@ -69,10 +72,12 @@ function CategoryFlag(category) {
   categoryEl.innerHTML = category;
 }
 
+//calculating BMI using formula 
 function BMICalculation(height, weight) {
   return weight / Math.pow(height / 100, 2);
 }
 
+//validating category according to bmi for males 
 function CategoryMale(bmi) {
   if (!bmi) {
     return "N.A";
@@ -88,7 +93,7 @@ function CategoryMale(bmi) {
     return "obese";
   }
 }
-
+//validating category according to bmi for females 
 function CategoryFemale(bmi) {
   if (!bmi) {
     return "N.A";
@@ -105,6 +110,7 @@ function CategoryFemale(bmi) {
   }
 }
 
+//resetting all values
 function resetValues() {
   age.value = "";
   weight.value = "";
@@ -121,6 +127,7 @@ function resetValues() {
 //reset button
 document.querySelector(".js-reset").addEventListener("click", resetValues);
 
+//Getting gender through radio buttons
 function Gender() {
   const selected = document.querySelector('input[name="gender"]:checked');
   if (selected) {
@@ -132,10 +139,10 @@ function Gender() {
 
 //Error Handling
 function validateError(error) {
-  const timeoutID = setTimeout(() => {
-    document.querySelector(".error").innerHTML = "";
-    document.querySelector(".error").style.margin = "0px";
-  }, 2000);
+  // Clear any previous timeout
+  if (errorTimeoutID) {
+    clearTimeout(errorTimeoutID);
+  }
 
   if (error === "Gender") {
     document.querySelector(".error").innerHTML = `Please Select ${error}`;
@@ -144,4 +151,11 @@ function validateError(error) {
     document.querySelector(".error").innerHTML = `Please enter ${error}`;
     document.querySelector(".error").style.margin = "10px";
   }
+
+  // Set a new timeout and store its ID
+  errorTimeoutID = setTimeout(() => {
+    document.querySelector(".error").innerHTML = "";
+    document.querySelector(".error").style.margin = "0px";
+    errorTimeoutID = null; // Optional: reset the ID
+  }, 2000);
 }
